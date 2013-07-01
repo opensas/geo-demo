@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- twitter bootstrap -->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" >
+
+    <!-- leaflet -->
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+
+    <!-- jquery / zepto -->
+    <!-- // <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js"></script> -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+
+    <!-- twitter bootstrap -->
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+
+    <!-- leaflet -->
+    <script src="//cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+
+    <!-- leaflet.sprite -->
+    <script src="js/leaflet.css.min.js"></script>
+    <script src="js/leaflet.sprite.js"></script>
+
+    <!-- cartodb connector -->
+    <script src="js/cartodbData.js"></script>
+
+    <title>OpenRefine, cartoDB and leafLet demo!</title>
+  </head>
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="#">CartoDB and leafLet demo!</a>
+        <form class="form-search navbar-search" id="search-form">
+          <div class="input-append">
+            <input type="text" class="search-query" placeholder="Search" id='filtro' />
+            <button class="btn" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+
+      <div id='map' class='map' style='height: 641px; position: relative; overflow: hidden;'>
+      </div>
+
+    </div>
+  </body>
+
+  <script>
+
+  // cartoDB configuration
+  var config = {
+    user   :'devel',
+    // table  : 'mis_contactos',
+    table  : 'my_contacts',
+  };
+
+  // create a map in the "map" div, set the view to a given place and zoom
+  var map = L.map('map', {
+    center: [-34.624874, -58.427166],
+    zoom : 12
+  });
+
+  // create a new layerGroup for addresses and save it to the map object
+  // see http://leafletjs.com/examples/layers-control.html
+  // see http://leafletjs.com/reference.html#layergroup
+  map.addresses = L.layerGroup().addTo(map);
+
+  // add an OpenStreetMap tile layer
+  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  renderAddresses = function(filter) {
+    fetchAddresses(filter, function(data) {
+      map.renderAddresses(data.rows);
+    }, config);
+  }
+
+  // add a method to my map to render every address
+  map.renderAddresses = function(addresses) {
+    map.addresses.clearLayers();
+    addresses.forEach(function(address) {
+
+      // blue, green, orange, yellow, purple, and violet
+      var colors = ['blue', 'green', 'orange', 'purple', 'red', 'violet', 'yellow'];
+      var color = colors[Math.floor(Math.random()*7)];
+
+      var prefix = 'osm_',
+          lat = address[prefix + 'lat'],
+          lon = address[prefix + 'lon'];
+
+      try {
+
+        var marker = L.marker([lat, lon], {
+            icon: L.spriteIcon(color)
+          })
+          .bindPopup([address.name, address.phone, address.email, address.address].join(', '));
+
+        map.addresses.addLayer(marker);
+
+      } catch(e) {
+        console.log('could not create marker for prefix ' + prefix);
+        console.log(address);
+      }
+
+    });
+    return this;
+  };
+
+  $('#filtro').on('input', function(e) {
+    renderAddresses($(this).val());
+  });
+
+  $(function() {
+    renderAddresses();
+  });
+
+  </script>
+</html>
+

@@ -1,0 +1,80 @@
+geo reference
+
+"http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=" + escape(value)
+"http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=Av Rivadavia 3245, Buenos Aires, argentina
+
+Av Rivadavia 3245, Buenos Aires, argentina
+
+'http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=' +
+escape(value + ', ciudad de buenos aires, argentina', 'url')
+
+lat:
+value.parseJson().results[0].geometry.location.lat
+
+(idem lon)
+
+
+rename columns
+
+name, email, phone, address
+
+
+http://opensas.cartodb.com/api/v2/sql?q=select * from contactos2&api_key=ba413f91177fd6622768fe021ac611f000fde23f
+
+
+-- publish
+
+*** create local repo
+
+git init
+
+*** create repo on github and add as a remote
+
+git remote add origin git@github.com:opensas/geo-sample.git
+git add .
+git commit -m 'initial commit'
+git push -u origin master
+
+*** create github pages branch
+git checkout --orphan gh-pages
+git add .
+
+*** commit some change
+git commit -m 'added title'
+git push origin gh-pages
+
+
+
+    {
+      "name": "sas",
+      "street": "la plata 2390",
+      "cartodb_id": 1,
+      "created_at": "2013-06-26T00:46:21.412Z",
+      "updated_at": "2013-06-26T00:58:26.799Z",
+      "the_geom": "0101000020E6100000FDA4DAA7E32D4DC0E3FC4D28445041C0",
+      "the_geom_webmercator": "0101000020110F0000064377E72DC858C1BB2873CAD2614FC1",
+      "cartodb_georef_status": true
+    },
+
+select * from test where name like '%cen%' or nickname like '%cen%'
+
+http://opensas.cartodb.com/api/v2/sql?q=select * from test where name like '%cen%' or nickname like '%cen%'&api_key=ba413f91177fd6622768fe021ac611f000fde23f
+
+http://opensas.cartodb.com/api/v2/sql?q=select%20*%20from%20test%20where%20name%20like%20%27%25cen%25%27%20or%20nickname%20like%20%27%25cen%25%27&api_key=ba413f91177fd6622768fe021ac611f000fde23f
+
+
+select%20*%20from%20test%20where%20name%20like%20%27%25cen%25%27%20or%20nickname%20like%20%27%25cen%25%27
+
+http://maps.googleapis.com/maps/api/geocode/json?address=avenida%20diaz%20velez%20y%20campichuelo,%20ciudad%20de%20buenos%20aires,%20argentina&sensor=false
+
+"http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=" + escape(value)
+"http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=" + escape(value)
+
+
+
+value.parseJson().results[0].geometry.location.lat
+
+
+-34.6144326, -58.40182050000001
+
+http://opensas.cartodb.com/api/v2/sql?q=select * from mis_contactos&api_key=ba413f91177fd6622768fe021ac611f000fde23f
